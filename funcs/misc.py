@@ -1,3 +1,5 @@
+import numpy as np
+
 radii_dict = {
     1: 0.31,
     2: 0.25,
