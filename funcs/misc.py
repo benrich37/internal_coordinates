@@ -100,6 +100,30 @@ def get_edges(bonds_ref):
             output = output + get_edges_a(bonds_ref, a)
     return output
 
+def same_edge(edge1, edge2):
+    # Assuming of same length
+    same = True
+    with_shift = False
+    for a in edge1:
+        same = same and a in edge2
+    if same:
+        with_shift = same_edge_shift(edge1, edge2)
+    return same, with_shift
+
+def same_edge_shift(edge1, edge2):
+    n = len(edge1)
+    shift = edge2.index(edge1[0])
+    with_shift = True
+    for a in range(n):
+        aligned = edge1[a] == edge2[(a + shift) % n]
+        with_shift = with_shift and aligned
+    return with_shift
+
+
+
+
+#def get_all_edge_n(edges)
+
 
 # def get_n_strings_from_a(bonds_ref, a):
 #     next_as = bonds_ref[a]
