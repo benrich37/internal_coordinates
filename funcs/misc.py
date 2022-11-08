@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 radii_dict = {
     1: 0.31,
