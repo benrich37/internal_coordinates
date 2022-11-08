@@ -47,6 +47,74 @@ def bonds_dict(atoms_obj):
         return_dict[i] = bonds
     return return_dict
 
+def grow_edge(bonds_ref, edge):
+    new_edges = []
+    front = edge[0][-1]
+    for a in bonds_ref[front]:
+        if a in edge[0]:
+            new_edges.append([edge[0], False])
+        else:
+            new_edge_0 = copy.copy(edge[0])
+            new_edge_0.append(a)
+            new_edges.append([new_edge_0, True])
+    return new_edges
+
+# Edges will be a list of edge, where each edge has the list of contiguous
+# bonded atoms as the first element, and the second element will be a bool
+# which is True is the edge has not yet terminated
+def grow_edges(bonds_ref, edges):
+    cont_bool = False
+    new_edges = []
+    for e in edges:
+        if e[1]:
+            cont_bool = True
+            es = grow_edge(bonds_ref, e)
+            # Using + here as es will be a list of edges
+            new_edges = new_edges + es
+        else:
+            # Using append here as e is just an edge still
+            new_edges.append(e)
+    if cont_bool:
+        return grow_edges(bonds_ref, new_edges)
+    else:
+        return new_edges
+
+def get_edges_a(bonds_ref, a):
+    edges = grow_edges(bonds_ref, [[[a], True]])
+    output = []
+    for e in edges:
+        output.append(e[0])
+    return output
+
+def a_in_edges(edges, a):
+    # Edges shouldnt have bools anymore at this point
+    for e in edges:
+        if a in e:
+            return True
+    return False
+
+def get_edges(bonds_ref):
+    output = []
+    for a in range(len(bonds_ref)):
+        if not a_in_edges(output, a):
+            output = output + get_edges_a(bonds_ref, a)
+    return output
+
+
+# def get_n_strings_from_a(bonds_ref, a):
+#     next_as = bonds_ref[a]
+#     branches = len(next_as)
+
+
+# def get_n_strings(atoms_obj, n):
+#     # followup function for bonds_dict, takes the bonds_dict and finds all contiguous strings of n bonded atoms
+#     bonds_ref = bonds_dict(atoms_obj)
+#     output = []
+#     for a in range(len(bonds_ref)):
+#         get_n_strings_from_a(bonds_ref, )
+
+
+
 
 def coordination_numbers(atoms_obj, sort=True):
     bond_dict = bonds_dict(atoms_obj)
